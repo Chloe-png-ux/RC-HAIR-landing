@@ -594,7 +594,6 @@
       color: var(--white);
     }
 
-    /* SDK container that will be populated by the real SDK */
     #coze-sdk-container {
       position: fixed;
       bottom: 100px;
@@ -620,11 +619,9 @@
       .products-grid {
         grid-template-columns: repeat(2, 1fr);
       }
-
       .nav {
         padding: 1.25rem 1.5rem;
       }
-
       .nav-links {
         display: none;
       }
@@ -635,15 +632,12 @@
         grid-template-columns: 1fr;
         gap: 1px;
       }
-
       .section {
         padding: 4rem 1.5rem;
       }
-
       .hero-title {
         font-size: 3rem;
       }
-
       .category-tabs {
         gap: 1.5rem;
       }
@@ -715,7 +709,7 @@
       <p class="payment-subtitle">Seamless Invisible Weft - 18"</p>
       <div class="payment-amount" id="paymentAmount">$289.00</div>
       
-      <!-- PayPal Mock Button -->
+      <!-- PayPal Button -->
       <button class="paypal-btn" id="paypalBtn">
         <svg viewBox="0 0 24 24" fill="currentColor">
           <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c1.387 2.654-.186 5.718-3.656 6.787-1.564.48-3.32.576-5.024.576H10.12l-1.355 8.59h3.316a.641.641 0 0 0 .633-.54l.026-.17a.641.641 0 0 1 .633-.54h.399c2.589 0 4.612-.543 5.767-1.81a3.35 3.35 0 0 0 .607-.541c1.233-1.84 1.228-4.285-.133-6.313h.002a3.7 3.7 0 0 0-.186-.438h.002z"/>
@@ -782,13 +776,13 @@
     });
 
     // ===== SDK Toggle Button =====
-    document.getElementById('sdkBtn').addEventListener('click', () => {
-      const container = document.getElementById('coze-sdk-container');
+    document.getElementById('sdkBtn').addEventListener('click', function() {
+      var container = document.getElementById('coze-sdk-container');
       container.classList.toggle('active');
     });
 
     // ===== Product Data =====
-    const PRODUCTS = [
+    var PRODUCTS = [
       {
         id: 'w1',
         name: 'Seamless Invisible Weft',
@@ -824,37 +818,45 @@
     ];
 
     // ===== Render Products =====
-    function renderProducts(category = 'all') {
-      const grid = document.getElementById('productsGrid');
-      const filtered = category === 'all' 
+    function renderProducts(category) {
+      category = category || 'all';
+      var grid = document.getElementById('productsGrid');
+      var filtered = category === 'all' 
         ? PRODUCTS 
-        : PRODUCTS.filter(p => p.category === category);
+        : PRODUCTS.filter(function(p) { return p.category === category; });
 
-      grid.innerHTML = filtered.map(product => `
-        <div class="product-card" data-id="${product.id}">
-          <img src="${product.image}" alt="${product.name}" loading="lazy">
-          <span class="product-type-badge">${product.type}</span>
-          <div class="product-overlay">
-            <p class="product-category">${product.category === 'wefts' ? 'Hair Weft' : 'Hair Topper'}</p>
-            <h3 class="product-name">${product.name}</h3>
-            <p class="product-price">$${product.price}.00</p>
-          </div>
-        </div>
-      `).join('');
+      var html = '';
+      for (var i = 0; i < filtered.length; i++) {
+        var product = filtered[i];
+        var categoryLabel = product.category === 'wefts' ? 'Hair Weft' : 'Hair Topper';
+        html += '<div class="product-card" data-id="' + product.id + '">' +
+          '<img src="' + product.image + '" alt="' + product.name + '" loading="lazy">' +
+          '<span class="product-type-badge">' + product.type + '</span>' +
+          '<div class="product-overlay">' +
+          '<p class="product-category">' + categoryLabel + '</p>' +
+          '<h3 class="product-name">' + product.name + '</h3>' +
+          '<p class="product-price">$' + product.price + '.00</p>' +
+          '</div></div>';
+      }
+      grid.innerHTML = html;
     }
 
     // ===== Category Tabs =====
-    document.querySelectorAll('.category-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        renderProducts(tab.dataset.category);
+    var tabs = document.querySelectorAll('.category-tab');
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].addEventListener('click', function() {
+        var allTabs = document.querySelectorAll('.category-tab');
+        for (var j = 0; j < allTabs.length; j++) {
+          allTabs[j].classList.remove('active');
+        }
+        this.classList.add('active');
+        renderProducts(this.getAttribute('data-category'));
       });
-    });
+    }
 
     // ===== Nav Scroll Effect =====
-    window.addEventListener('scroll', () => {
-      const nav = document.getElementById('nav');
+    window.addEventListener('scroll', function() {
+      var nav = document.getElementById('nav');
       if (window.scrollY > 100) {
         nav.classList.add('scrolled');
       } else {
@@ -863,32 +865,26 @@
     });
 
     // ===== PayPal Button Handler =====
-    document.getElementById('paypalBtn').addEventListener('click', () => {
-      const btn = document.getElementById('paypalBtn');
+    document.getElementById('paypalBtn').addEventListener('click', function() {
+      var btn = this;
       
       // Show loading state
-      btn.innerHTML = `
-        <svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" stroke-dasharray="31.4" stroke-dashoffset="10"/>
-        </svg>
-        <span>Redirecting to PayPal...</span>
-      `;
+      btn.innerHTML = '<svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+        '<circle cx="12" cy="12" r="10" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg>' +
+        '<span>Redirecting to PayPal...</span>';
       btn.style.pointerEvents = 'none';
       
       // Simulate redirect delay
-      setTimeout(() => {
+      setTimeout(function() {
         // In production, replace with actual PayPal checkout URL
         // window.location.href = 'https://www.paypal.com/checkoutnow?amount=289.00';
         
         alert('This is a demo. In production, this would redirect to PayPal checkout.\n\nAmount: $289.00\nProduct: Seamless Invisible Weft - 18"');
         
         // Reset button
-        btn.innerHTML = `
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c1.387 2.654-.186 5.718-3.656 6.787-1.564.48-3.32.576-5.024.576H10.12l-1.355 8.59h3.316a.641.641 0 0 0 .633-.54l.026-.17a.641.641 0 0 1 .633-.54h.399c2.589 0 4.612-.543 5.767-1.81a3.35 3.35 0 0 0 .607-.541c1.233-1.84 1.228-4.285-.133-6.313h.002a3.7 3.7 0 0 0-.186-.438h.002z"/>
-          </svg>
-          <span>Pay with PayPal</span>
-        `;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor">' +
+          '<path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c1.387 2.654-.186 5.718-3.656 6.787-1.564.48-3.32.576-5.024.576H10.12l-1.355 8.59h3.316a.641.641 0 0 0 .633-.54l.026-.17a.641.641 0 0 1 .633-.54h.399c2.589 0 4.612-.543 5.767-1.81a3.35 3.35 0 0 0 .607-.541c1.233-1.84 1.228-4.285-.133-6.313h.002a3.7 3.7 0 0 0-.186-.438h.002z"/></svg>' +
+          '<span>Pay with PayPal</span>';
         btn.style.pointerEvents = 'auto';
       }, 1500);
     });
