@@ -112,7 +112,7 @@
     .hero-bg {
       position: absolute;
       inset: 0;
-      background-image: url('/public/hero-bg.png');
+      background-image: url('hero-bg.png');
       background-size: cover;
       background-position: center 30%;
       filter: brightness(0.85);
@@ -307,7 +307,6 @@
       aspect-ratio: 3/4;
       overflow: hidden;
       cursor: pointer;
-      group: true;
     }
 
     .product-card img {
@@ -566,7 +565,7 @@
       height: 18px;
     }
 
-    /* ===== Floating SDK Placeholder ===== */
+    /* ===== Floating SDK Button ===== */
     .sdk-placeholder {
       position: fixed;
       bottom: 2rem;
@@ -758,34 +757,36 @@
     <p class="footer-copy">&copy; 2024 RC Hair. All rights reserved.</p>
   </footer>
 
-  <!-- SDK Placeholder Button -->
+  <!-- SDK Floating Button -->
   <div class="sdk-placeholder" id="sdkBtn" title="AI Assistant">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
     </svg>
   </div>
 
-  <!-- 
-    ============================================
-    SDK CONTAINER - Reserved for Coze Web SDK
-    ============================================
-    稍后嵌入扣子 Web SDK 脚本时，将 SDK 初始化代码放在这里
-    示例：
-    <script src="https://xxx.coze.cn/.../sdk.js"></script>
-    <script>
-      new CozeWebSDK.WebChat({
-        config: { botId: 'xxx', ...
-        },
-        componentProps: { ...
-        },
-        element: document.getElementById('coze-sdk-container'),
-      });
-    </script>
-    ============================================
-  -->
+  <!-- Coze SDK Container -->
   <div id="coze-sdk-container"></div>
 
+  <!-- Coze Web SDK Script -->
+  <script src="https://lf-cdn.coze.cn/sdk/coze-web.js"></script>
   <script>
+    // ===== Coze SDK Initialization =====
+    const cozeWebChat = new CozeWebSDK.WebChat({
+      config: {
+        botId: '7629917149187866634',
+      },
+      componentProps: {
+        title: 'RC Hair Assistant',
+      },
+      element: document.getElementById('coze-sdk-container'),
+    });
+
+    // ===== SDK Toggle Button =====
+    document.getElementById('sdkBtn').addEventListener('click', () => {
+      const container = document.getElementById('coze-sdk-container');
+      container.classList.toggle('active');
+    });
+
     // ===== Product Data =====
     const PRODUCTS = [
       {
@@ -794,7 +795,7 @@
         category: 'wefts',
         type: 'Hair Weft',
         price: 289,
-        image: '/public/hair-1.png'
+        image: 'hair-1.png'
       },
       {
         id: 'w2',
@@ -802,7 +803,7 @@
         category: 'wefts',
         type: 'Hair Weft',
         price: 389,
-        image: '/public/hair-2.png'
+        image: 'hair-2.png'
       },
       {
         id: 't1',
@@ -810,7 +811,7 @@
         category: 'toppers',
         type: 'Hair Topper',
         price: 449,
-        image: '/public/hair-3.png'
+        image: 'hair-3.png'
       },
       {
         id: 't2',
@@ -818,7 +819,7 @@
         category: 'toppers',
         type: 'Hair Topper',
         price: 599,
-        image: '/public/hair-4.jpg'
+        image: 'hair-4.jpg'
       }
     ];
 
@@ -861,9 +862,11 @@
       }
     });
 
-    // ===== PayPal Mock Button =====
+    // ===== PayPal Button Handler =====
     document.getElementById('paypalBtn').addEventListener('click', () => {
       const btn = document.getElementById('paypalBtn');
+      
+      // Show loading state
       btn.innerHTML = `
         <svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10" stroke-dasharray="31.4" stroke-dashoffset="10"/>
@@ -872,8 +875,14 @@
       `;
       btn.style.pointerEvents = 'none';
       
+      // Simulate redirect delay
       setTimeout(() => {
-        alert('This is a mock PayPal button. In production, this would redirect to PayPal checkout.');
+        // In production, replace with actual PayPal checkout URL
+        // window.location.href = 'https://www.paypal.com/checkoutnow?amount=289.00';
+        
+        alert('This is a demo. In production, this would redirect to PayPal checkout.\n\nAmount: $289.00\nProduct: Seamless Invisible Weft - 18"');
+        
+        // Reset button
         btn.innerHTML = `
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c1.387 2.654-.186 5.718-3.656 6.787-1.564.48-3.32.576-5.024.576H10.12l-1.355 8.59h3.316a.641.641 0 0 0 .633-.54l.026-.17a.641.641 0 0 1 .633-.54h.399c2.589 0 4.612-.543 5.767-1.81a3.35 3.35 0 0 0 .607-.541c1.233-1.84 1.228-4.285-.133-6.313h.002a3.7 3.7 0 0 0-.186-.438h.002z"/>
@@ -884,13 +893,7 @@
       }, 1500);
     });
 
-    // ===== SDK Placeholder Toggle =====
-    document.getElementById('sdkBtn').addEventListener('click', () => {
-      const container = document.getElementById('coze-sdk-container');
-      container.classList.toggle('active');
-    });
-
-    // ===== Initialize =====
+    // ===== Initialize Products on Page Load =====
     renderProducts();
   </script>
 </body>
