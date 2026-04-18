@@ -112,7 +112,7 @@
     .hero-bg {
       position: absolute;
       inset: 0;
-      background-image: url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1920&q=80');
+      background-image: url('/public/hero-bg.png');
       background-size: cover;
       background-position: center 30%;
       filter: brightness(0.85);
@@ -608,6 +608,14 @@
       display: block;
     }
 
+    /* ===== PayPal Button Animation ===== */
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .spin {
+      animation: spin 1s linear infinite;
+    }
+
     /* ===== Responsive ===== */
     @media (max-width: 1024px) {
       .products-grid {
@@ -885,15 +893,5 @@
     // ===== Initialize =====
     renderProducts();
   </script>
-
-  <style>
-    /* Additional animation for PayPal button */
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    .spin {
-      animation: spin 1s linear infinite;
-    }
-  </style>
 </body>
 </html>
