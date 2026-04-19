@@ -1,15 +1,14 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    }
-  ],
+  "buildCommand": "echo 'Static deployment - no build needed'",
+  "installCommand": "echo 'No dependencies needed'",
+  "framework": null,
+  "outputDirectory": ".",
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
+    { "src": "/hero-bg.png", "dest": "/public/hero-bg.png" },
+    { "src": "/hair-1.png", "dest": "/public/hair-1.png" },
+    { "src": "/hair-2.png", "dest": "/public/hair-2.png" },
+    { "src": "/hair-3.png", "dest": "/public/hair-3.png" },
+    { "src": "/hair-4.jpg", "dest": "/public/hair-4.jpg" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
