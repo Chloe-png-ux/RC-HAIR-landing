@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState('all');
@@ -43,12 +43,14 @@ export default function HomePage() {
     }
   ];
 
-  // Scroll effect
-  if (typeof window !== 'undefined') {
-    window.addEventListener('scroll', () => {
+  // Scroll effect - use useEffect to avoid hydration mismatch
+  useEffect(() => {
+    const handleScroll = () => {
       setIsScrolled(window.scrollY > 100);
-    });
-  }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const filteredProducts = activeCategory === 'all' 
     ? products 
