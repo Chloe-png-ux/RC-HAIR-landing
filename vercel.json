@@ -1,14 +1,8 @@
 {
-  "buildCommand": "echo 'Static deployment - no build needed'",
-  "installCommand": "echo 'No dependencies needed'",
-  "framework": null,
+  "buildCommand": null,
+  "installCommand": null,
   "outputDirectory": ".",
-  "routes": [
-    { "src": "/hero-bg.png", "dest": "/public/hero-bg.png" },
-    { "src": "/hair-1.png", "dest": "/public/hair-1.png" },
-    { "src": "/hair-2.png", "dest": "/public/hair-2.png" },
-    { "src": "/hair-3.png", "dest": "/public/hair-3.png" },
-    { "src": "/hair-4.jpg", "dest": "/public/hair-4.jpg" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
